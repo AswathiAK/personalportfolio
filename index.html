@@ -526,9 +526,10 @@
                     </div>
                     <div class="col-md-6 col-sm-12 col-xs-12">
                         <div class="content-right">
-                            <form name="submit-to-google-sheet" action="" onsubmit="return validation()">
+                             <form name="submit-to-google-sheet" action="" method="post" role="form" onsubmit="return validate()">
                                 <input type="text" name="Name" placeholder="Your Name" id="name">
                                 <input type="email" name="Email" placeholder="Your Email" id="email">
+                               <!--<input type="number" name="Phone" placeholder="Your No" id="phone">--> 
                                 <textarea name="Message" rows="6" placeholder="Your Message" id="message"></textarea>
                                 <button type="submit" class="btn btn2">Submit</button>
                             </form>
@@ -563,43 +564,46 @@
     <script src="js/main.js"></script>
 
     <script>
-        function validation(){
-            var name = document.getElementById('name').value;
-            if(name==""){
+        function validate(){
+
+            var name = document.getElementById('name');
+            var email=document.getElementById('email');
+             var message=document.getElementById('message');
+             submitOK='true';
+            if(name.value==""){
                 alert("Please Enter the Name");
-                return false;
+                submitOK='false';
             }
-            var email=document.getElementById('email').value;
-            if(email==""){
-                alert("Please Enter the Email id");
-                return false;
-            }
-            var message=document.getElementById('message').value;
-            if(message==""){
-                alert("Enter the message you want to send");
-                return false;
-            }
-            //return true;
-            form.reset() 
             
-        }        
-                 
-   
-  
+            else if(email.value==""){
+                alert("Please Enter the Email id");
+                submitOK='false';
+            }
+           
+            else if(message.value==""){
+                alert("Enter the message you want to send");
+                submitOK='false';
+            }
+            else if(submitOK=='false'){                
+                return false;
+            }
+        }
+
         const scriptURL = 'https://script.google.com/macros/s/AKfycbx2RHb8rGbZKN4crapDmSaE2xY9kB3lxQY7EwO8VCKNfxOO2oj02UONbxiHzVi6hiYTNw/exec'
         const form = document.forms['submit-to-google-sheet']
         const msg=document.getElementById("mesg");
         
         form.addEventListener('submit', e => {
           e.preventDefault()
-          fetch(scriptURL, { method: 'POST', body: new FormData(form)})
-            .then(response => console.log('Success!',response)) 
+          if(submitOK=='true'){
+            fetch(scriptURL, { method: 'POST', body: new FormData(form)})
+            .then(response => {alert('Message Sent Successfully')
+            form.reset()})
                            
             .catch(error => console.error('Error!', error.message))
+          }          
         })
-    </script>
-
-   
+    </script>   
 
 </body>
 
